@@ -1,0 +1,33 @@
+{% import 'macros.html' as m %}
+<div class="fig" style="padding-top:52px;">
+  <div class="fig-body" style="height:650px;">
+
+    <!-- title block -->
+    <div class="abs" style="left:0; top:0; width:540px;">
+      <div class="fig-kicker" style="font-size:14px;">{{ meta.kicker }}</div>
+      <div style="font-size:64px; font-weight:700; line-height:1.02; margin-top:26px; letter-spacing:-0.01em;">Regaining<br>Control</div>
+      <div style="font-size:27px; font-weight:600; line-height:1.2; margin-top:22px; color:var(--ops);">Observability for OpenStack<br>Platforms in Difficulty</div>
+      <div class="muted" style="font-size:20px; line-height:1.4; margin-top:26px; max-width:470px;">{{ meta.tagline }} {{ meta.audience_line }}</div>
+      <div style="margin-top:44px; font-size:21px; font-weight:600;">{{ meta.author.name }}</div>
+      <div class="mono muted" style="font-size:15px; margin-top:6px; letter-spacing:0.04em;">{{ meta.pages }} pages · {{ meta.reading_time }}</div>
+    </div>
+
+    <!-- signal convergence motif -->
+    <div class="abs" style="left:590px; top:0; width:522px; height:470px;">
+      {{ m.convergence(522) }}
+    </div>
+
+    <!-- journey -->
+    <div class="abs" style="left:590px; top:492px; width:522px;">
+      <div class="label" style="margin-bottom:12px;">The path</div>
+      {{ m.journey(meta.journey, 14) }}
+    </div>
+
+    <!-- baseline -->
+    <div class="abs" style="left:0; right:0; top:600px; height:2px; background:linear-gradient(to right, var(--ops) 0, var(--ops) 60%, var(--biz) 100%);"></div>
+    <div class="abs mono" style="left:0; right:0; top:614px; display:flex; justify-content:space-between; font-size:13px; letter-spacing:0.08em; color:var(--fg-dim);">
+      <span>{{ meta.central_message|upper }}</span>
+      <span class="t-ops">SIGNAL → MEANING → IMPACT → RISK → DECISION</span>
+    </div>
+  </div>
+</div>

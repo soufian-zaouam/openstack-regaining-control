@@ -1,0 +1,99 @@
+{# Jinja macros shared by the figures and the slides.
+   Colours are CSS variables: tech, ops, biz, risk, neutral, fg, fg-muted, rule. #}
+
+{% macro arrow_right(len=60, color='ops', width=2, head=9) -%}
+<svg class="arrow" width="{{ len }}" height="{{ head*2 }}" viewBox="0 0 {{ len }} {{ head*2 }}" aria-hidden="true">
+  <line class="arrow-line" x1="0" y1="{{ head }}" x2="{{ len - head }}" y2="{{ head }}" stroke="var(--{{ color }})" stroke-width="{{ width }}"/>
+  <path class="arrow-head" d="M{{ len - head }} {{ head/2 }} L{{ len }} {{ head }} L{{ len - head }} {{ head*1.5 }} Z" fill="var(--{{ color }})"/>
+</svg>
+{%- endmacro %}
+
+{% macro arrow_down(len=40, color='ops', width=2, head=9) -%}
+<svg class="arrow" width="{{ head*2 }}" height="{{ len }}" viewBox="0 0 {{ head*2 }} {{ len }}" aria-hidden="true">
+  <line class="arrow-line" x1="{{ head }}" y1="0" x2="{{ head }}" y2="{{ len - head }}" stroke="var(--{{ color }})" stroke-width="{{ width }}"/>
+  <path class="arrow-head" d="M{{ head/2 }} {{ len - head }} L{{ head }} {{ len }} L{{ head*1.5 }} {{ len - head }} Z" fill="var(--{{ color }})"/>
+</svg>
+{%- endmacro %}
+
+{# A dashed connector without a head, horizontal #}
+{% macro link_right(len=60, color='rule', width=2) -%}
+<svg class="arrow" width="{{ len }}" height="4" viewBox="0 0 {{ len }} 4" aria-hidden="true">
+  <line x1="0" y1="2" x2="{{ len }}" y2="2" stroke="var(--{{ color }})" stroke-width="{{ width }}" stroke-dasharray="6 6"/>
+</svg>
+{%- endmacro %}
+
+{# The three-register legend line #}
+{% macro registers(items=[('tech','Technical'),('ops','Operational'),('biz','Business / decision')]) -%}
+<div class="registers">
+  {% for cls, name in items %}<div class="item"><span class="dot {{ cls }}"></span>{{ name }}</div>{% endfor %}
+</div>
+{%- endmacro %}
+
+{# A small sparkline: values scaled into a box; color = css var name #}
+{% macro sparkline(values, width=160, height=44, color='tech', stroke=2.5, area=false) -%}
+{%- set mx = values|max -%}{%- set mn = values|min -%}{%- set rng = (mx - mn) if mx != mn else 1 -%}
+{%- set n = values|length -%}
+{%- set pts = [] -%}
+{%- for v in values -%}
+  {%- set x = (loop.index0 / (n - 1)) * (width - 4) + 2 -%}
+  {%- set y = height - 3 - ((v - mn) / rng) * (height - 8) -%}
+  {%- set _ = pts.append('%.1f,%.1f' % (x, y)) -%}
+{%- endfor -%}
+<svg width="{{ width }}" height="{{ height }}" viewBox="0 0 {{ width }} {{ height }}" aria-hidden="true">
+  {% if area %}<polygon points="2,{{ height-2 }} {{ pts|join(' ') }} {{ width-2 }},{{ height-2 }}" fill="var(--{{ color }}-soft)"/>{% endif %}
+  <polyline points="{{ pts|join(' ') }}" fill="none" stroke="var(--{{ color }})" stroke-width="{{ stroke }}" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="{{ pts[-1].split(',')[0] }}" cy="{{ pts[-1].split(',')[1] }}" r="4" fill="var(--{{ color }})"/>
+</svg>
+{%- endmacro %}
+
+{# Trend glyph: up / down / flat #}
+{% macro trend(dir='up', color='ops', size=18) -%}
+<svg width="{{ size }}" height="{{ size }}" viewBox="0 0 18 18" aria-hidden="true">
+  {% if dir == 'up' %}<path d="M3 13 L9 6 L15 13" fill="none" stroke="var(--{{ color }})" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  {% elif dir == 'down' %}<path d="M3 6 L9 13 L15 6" fill="none" stroke="var(--{{ color }})" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  {% else %}<path d="M3 9 L15 9" fill="none" stroke="var(--{{ color }})" stroke-width="2.4" stroke-linecap="round"/>{% endif %}
+</svg>
+{%- endmacro %}
+
+{# The cover motif: ten signal lines converging into understanding, then decision.
+   Drawn in a 522 × 470 box; pass width to scale it (height follows). #}
+{% macro convergence(width=522, label_size=13) -%}
+{%- set rows = [
+  ('API latency', [30,32,31,36,40,46,55,68]),
+  ('Liveness', [40,40,20,40,22,40,24,40]),
+  ('Messaging', [12,13,12,14,38,52,64,72]),
+  ('Database', [30,31,30,32,31,34,36,38]),
+  ('Builds', [10,12,14,18,24,30,38,46]),
+  ('Capacity', [52,54,56,59,62,66,70,74]),
+  ('Storage', [20,20,21,20,22,21,23,22]),
+  ('Network', [10,10,26,10,12,30,10,12]),
+  ('State', [20,22,25,28,30,34,38,42]),
+  ('Reliability', [16,18,22,28,34,42,50,60]),
+] -%}
+<svg width="{{ width }}" height="{{ (width * 470 / 522)|round(1) }}" viewBox="0 0 522 470" aria-hidden="true" style="overflow:visible; display:block;">
+  {% for name, vals in rows %}
+    {% set y0 = 14 + loop.index0 * 44 %}
+    <text x="0" y="{{ y0 + 22 }}" font-family="IBM Plex Mono, monospace" font-size="{{ label_size }}" fill="var(--fg-muted)" letter-spacing="1">{{ name }}</text>
+    {% set pts = [] %}
+    {% for v in vals %}{% set _ = pts.append('%.1f,%.1f' % (110 + loop.index0 * 14, y0 + 30 - v * 0.3)) %}{% endfor %}
+    <polyline points="{{ pts|join(' ') }}" fill="none" stroke="var(--tech)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/>
+    <path d="M 212 {{ y0 + 18 }} C 300 {{ y0 + 18 }}, 330 236, 392 236" fill="none" stroke="var(--ops)" stroke-width="1.6" opacity="0.75"/>
+  {% endfor %}
+  <circle cx="400" cy="236" r="9" fill="var(--ops)"/>
+  <circle cx="400" cy="236" r="18" fill="none" stroke="var(--ops)" stroke-width="1.5" opacity="0.5"/>
+  <text x="400" y="206" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="{{ label_size }}" fill="var(--ops)" letter-spacing="2">UNDERSTANDING</text>
+  <line x1="418" y1="236" x2="484" y2="236" stroke="var(--biz)" stroke-width="2"/>
+  <path d="M484 230 L496 236 L484 242 Z" fill="var(--biz)"/>
+  <circle cx="508" cy="236" r="9" fill="var(--biz)"/>
+  <text x="508" y="272" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="{{ label_size }}" fill="var(--biz)" letter-spacing="2">DECISION</text>
+</svg>
+{%- endmacro %}
+
+{# The seven-step journey as pills #}
+{% macro journey(steps, size=14) -%}
+<div class="row" style="gap:8px; flex-wrap:wrap; row-gap:10px;">
+  {% for step in steps %}
+  <span class="pill {{ 'biz' if loop.last else ('ops' if loop.index >= 5 else '') }}" style="font-size:{{ size }}px; padding:4px 10px;">{{ step }}</span>{% if not loop.last %}<span style="color:var(--fg-dim); font-size:{{ size + 2 }}px;">→</span>{% endif %}
+  {% endfor %}
+</div>
+{%- endmacro %}

@@ -1,0 +1,157 @@
+/* Regaining Control — figure system.
+   A figure is a 1200 × 750 canvas (16:10). It is rendered to figures/NN-slug.png
+   at 1600 × 1000 and embedded in the PDF page at 0.575 zoom, so nothing in a
+   figure may be smaller than 16 px, and reading text stays at 20 px or more. */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.fig {
+  position: relative;
+  width: 1200px;
+  height: 750px;
+  overflow: hidden;
+  background: var(--ink-0);
+  color: var(--fg);
+  font-family: var(--sans);
+  font-size: 20px;
+  line-height: 1.3;
+  padding: 38px 48px 34px 48px;
+  -webkit-font-smoothing: antialiased;
+}
+/* the discreet grid of the collection's figures */
+.fig::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,0.028) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.028) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+.fig > * { position: relative; }
+
+/* header: kicker, title, figure number */
+.fig-head { display: flex; justify-content: space-between; align-items: flex-start; height: 74px; }
+.fig-kicker {
+  font-family: var(--mono); font-size: 15px; font-weight: 600;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--ops);
+}
+.fig-kicker::before { content: "— "; }
+.fig-title { font-size: 30px; font-weight: 600; line-height: 1.15; margin-top: 8px; color: var(--fg); }
+.fig-num { font-family: var(--mono); font-size: 15px; letter-spacing: 0.16em; color: var(--fg-muted); margin-top: 2px; }
+.fig-body { position: relative; height: 604px; }
+.fig-body.tall { height: 604px; }
+
+/* text utilities */
+.mono { font-family: var(--mono); }
+.label {
+  font-family: var(--mono); font-size: 13px; font-weight: 500;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--fg-muted);
+}
+.small { font-size: 17px; color: var(--fg-muted); }
+.muted { color: var(--fg-muted); }
+.dim { color: var(--fg-dim); }
+.strong { font-weight: 600; color: var(--fg); }
+.t-tech { color: var(--tech); }
+.t-ops { color: var(--ops); }
+.t-biz { color: var(--biz); }
+.t-risk { color: var(--risk); }
+.t-neutral { color: var(--neutral); }
+.center { text-align: center; }
+.right { text-align: right; }
+
+/* panels: a grouping surface with an optional label */
+.panel {
+  position: relative;
+  background: rgba(27, 36, 48, 0.82);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 18px 20px;
+}
+.panel.dashed { border-style: dashed; background: rgba(27, 36, 48, 0.35); }
+.panel > .label { display: block; margin-bottom: 12px; }
+.panel.tech { border-color: rgba(90,160,224,0.55); }
+.panel.ops { border-color: rgba(224,164,88,0.6); }
+.panel.biz { border-color: rgba(53,181,160,0.6); }
+.panel.risk { border-color: rgba(224,101,90,0.6); }
+
+/* boxes: a single item */
+.box {
+  background: var(--ink-2);
+  border: 1px solid var(--rule);
+  border-radius: 7px;
+  padding: 10px 14px;
+  font-size: 20px;
+  line-height: 1.25;
+}
+.box .sub { display: block; font-family: var(--mono); font-size: 15px; color: var(--fg-muted); margin-top: 4px; }
+.box.tech { border-color: var(--tech); }
+.box.ops { border-color: var(--ops); }
+.box.biz { border-color: var(--biz); }
+.box.risk { border-color: var(--risk); }
+.box.neutral { border-color: var(--neutral); color: var(--fg-muted); }
+.box.fill-tech { background: var(--tech-soft); border-color: var(--tech); }
+.box.fill-ops { background: var(--ops-soft); border-color: var(--ops); }
+.box.fill-biz { background: var(--biz-soft); border-color: var(--biz); }
+.box.fill-risk { background: var(--risk-soft); border-color: var(--risk); }
+.box.ghost { background: transparent; border-style: dashed; color: var(--fg-muted); }
+.box.big { font-size: 24px; font-weight: 600; padding: 14px 18px; }
+.box.glow-ops { box-shadow: 0 0 0 1px var(--ops), 0 0 26px rgba(224,164,88,0.25); }
+.box.glow-biz { box-shadow: 0 0 0 1px var(--biz), 0 0 26px rgba(53,181,160,0.25); }
+
+/* tags: uppercase mono chips */
+.tag {
+  display: inline-block;
+  font-family: var(--mono); font-size: 13px; font-weight: 500;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 4px 10px; border: 1px solid currentColor; border-radius: 4px;
+  color: var(--fg-muted); line-height: 1.1; white-space: nowrap;
+}
+.tag.tech { color: var(--tech); }
+.tag.ops { color: var(--ops); }
+.tag.biz { color: var(--biz); }
+.tag.risk { color: var(--risk); }
+.tag.solid-ops { background: var(--ops); color: var(--ink-0); border-color: var(--ops); }
+.tag.solid-biz { background: var(--biz); color: var(--ink-0); border-color: var(--biz); }
+
+/* pills: rounded mono chips for signal names */
+.pill {
+  display: inline-block; font-family: var(--mono); font-size: 15px;
+  padding: 5px 12px; border-radius: 999px; border: 1px solid var(--rule);
+  color: var(--fg); background: var(--ink-1); white-space: nowrap; line-height: 1.2;
+}
+.pill.tech { border-color: var(--tech); color: var(--tech); }
+.pill.ops { border-color: var(--ops); color: var(--ops); }
+.pill.biz { border-color: var(--biz); color: var(--biz); }
+.pill.risk { border-color: var(--risk); color: var(--risk); }
+
+/* layout helpers */
+.row { display: flex; align-items: center; gap: 14px; }
+.col { display: flex; flex-direction: column; gap: 12px; }
+.grow { flex: 1 1 auto; }
+.abs { position: absolute; }
+.stack > * + * { margin-top: 10px; }
+.hr { height: 1px; background: var(--rule); border: 0; }
+
+/* flow arrows drawn with SVG */
+svg.arrow { display: block; overflow: visible; }
+.arrow-line { stroke-width: 2; fill: none; }
+.arrow-head { stroke: none; }
+
+/* a legend for the three registers, bottom of a figure */
+.registers { display: flex; gap: 22px; align-items: center; }
+.registers .item { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 14px; letter-spacing: 0.08em; color: var(--fg-muted); text-transform: uppercase; }
+.registers .dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot.tech { background: var(--tech); } .dot.ops { background: var(--ops); } .dot.biz { background: var(--biz); } .dot.risk { background: var(--risk); } .dot.neutral { background: var(--neutral); }
+
+/* numbered step */
+.step-num {
+  font-family: var(--mono); font-size: 15px; font-weight: 600; color: var(--ops);
+  letter-spacing: 0.08em;
+}
+/* footnote line at the very bottom of a figure */
+.fig-foot {
+  position: absolute; left: 48px; right: 48px; bottom: 30px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; color: var(--fg-dim);
+}

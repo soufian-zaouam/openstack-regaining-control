@@ -1,0 +1,82 @@
+{% import 'macros.html' as m %}
+<div class="fig">
+  <div class="fig-head">
+    <div>
+      <div class="fig-kicker">Regaining Control · Correlation</div>
+      <div class="fig-title">Why one metric is not enough</div>
+    </div>
+    <div class="fig-num">FIG. {{ fig_num }}</div>
+  </div>
+  <div class="fig-body">
+
+    <!-- ALONE: one gauge, no situation -->
+    <div class="panel abs" style="left:0; top:0; width:380px; height:560px;">
+      <span class="label">Alone</span>
+
+      <!-- semicircular gauge: neutral track, amber fill to 85 % -->
+      <svg class="abs" style="left:39px; top:52px;" width="300" height="165" viewBox="0 0 300 165" aria-hidden="true">
+        <path d="M 30 150 A 120 120 0 0 1 270 150" fill="none" stroke="var(--neutral)" stroke-opacity="0.32" stroke-width="18" stroke-linecap="butt"/>
+        <path d="M 30 150 A 120 120 0 0 1 256.9 95.5" fill="none" stroke="var(--ops)" stroke-width="18" stroke-linecap="butt"/>
+        <line x1="30" y1="150" x2="270" y2="150" stroke="var(--rule)" stroke-width="1"/>
+      </svg>
+      <div class="abs mono center" style="left:39px; top:146px; width:300px; font-size:46px; font-weight:600; line-height:1; letter-spacing:-0.01em;">85<span style="margin-left:0.16em;">%</span></div>
+      <div class="abs center" style="left:39px; top:224px; width:300px; font-size:18px; color:var(--fg-muted);">Controller CPU</div>
+
+      <!-- what it could be -->
+      <div class="abs col" style="left:39px; top:270px; width:300px; gap:9px;">
+        {% for w in ['a batch job', 'a backup', 'nothing at all'] %}
+        <div class="box ghost center" style="padding:9px 12px; font-size:19px;">{{ w }}</div>
+        {% endfor %}
+      </div>
+      <div class="abs center" style="left:39px; top:446px; width:300px;"><span class="tag">no conclusion</span></div>
+
+      <div class="abs mono center" style="left:0; right:0; top:512px; font-size:14px; letter-spacing:0.06em; color:var(--fg-dim);">a number, not a situation</div>
+    </div>
+
+    <!-- TOGETHER: four signals, one reading, one decision -->
+    <div class="panel ops abs" style="left:404px; top:0; width:708px; height:560px;">
+      <span class="label t-ops">Together</span>
+
+      <!-- four rows: signal, trend, note -->
+      {% set rows = [
+        ('Controller CPU ↑',   [42,45,44,48,52,55,61,66,72,78,85], 'same 85 %'),
+        ('API latency ↑',      [20,22,21,25,24,30,34,33,40,47,55], 'p95 climbing'),
+        ('RabbitMQ backlog ↑', [5,6,5,8,12,11,18,24,30,41,52],     'queues not draining'),
+        ('Scheduler delays ↑', [10,11,12,12,15,17,21,24,29,35,40], 'time to ACTIVE stretching'),
+      ] %}
+      {% for name, vals, note in rows %}
+      <div class="abs" style="left:20px; top:{{ 50 + loop.index0 * 106 }}px; width:286px;">
+        <span class="pill tech">{{ name }}</span>
+        <div style="margin-top:6px;">{{ m.sparkline(vals, 200, 36, 'tech', 2.2) }}</div>
+        <div class="mono" style="margin-top:2px; font-size:14px; color:var(--fg-muted);">{{ note }}</div>
+      </div>
+      {% endfor %}
+
+      <!-- converging lines: from the four trends into one reading -->
+      <svg class="abs" style="left:0; top:0;" width="706" height="558" viewBox="0 0 706 558" aria-hidden="true">
+        {% for i in range(4) %}
+        {% set y0 = 102 + i * 106 %}
+        <path d="M 228 {{ y0 }} C 296 {{ y0 }}, 286 261, 346 261" fill="none" stroke="var(--ops)" stroke-width="2" stroke-opacity="0.85" stroke-linecap="round"/>
+        {% endfor %}
+        <circle cx="346" cy="261" r="4" fill="var(--ops)"/>
+      </svg>
+
+      <!-- the reading, the risk, the decision -->
+      <div class="abs" style="left:346px; top:197px; width:320px;">
+        <div class="box fill-ops glow-ops" style="padding:14px 16px;">
+          <div style="font-size:22px; font-weight:600; line-height:1.2;">Potential control-plane degradation</div>
+          <span class="sub" style="font-size:14px; margin-top:8px; line-height:1.35;">since: two weeks<br>what changed: network maintenance</span>
+        </div>
+        <div class="center" style="margin:0 auto; height:32px; display:flex; justify-content:center;">{{ m.arrow_down(32, 'biz') }}</div>
+        <div class="box biz" style="padding:11px 16px; font-size:20px;">Risk: the platform slows, then stops delivering</div>
+        <div class="center" style="margin:0 auto; height:32px; display:flex; justify-content:center;">{{ m.arrow_down(32, 'biz') }}</div>
+        <div class="box fill-biz" style="padding:11px 16px; font-size:20px; font-weight:600;">Decision: stabilise the control plane before any change</div>
+      </div>
+    </div>
+
+    <div class="abs mono" style="left:0; right:0; top:578px; display:flex; justify-content:space-between; font-size:14px; letter-spacing:0.06em; color:var(--fg-dim);">
+      <span>Same number. Different situation.</span>
+      <span class="t-ops">A single metric rarely tells the whole story.</span>
+    </div>
+  </div>
+</div>

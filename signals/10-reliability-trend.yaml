@@ -1,0 +1,52 @@
+# Signal 10 — the source of its KPI card, its guide page and its LinkedIn card.
+# Edit this file, then run `make cards pages pdf`. Never edit the rendered images.
+id: "10"
+slug: reliability-trend
+name: Reliability trend
+subtitle: Recurrence, time to understand, change failure rate
+domain: organisation
+domain_label: Organisation
+page: "10"
+
+what_we_see: >-
+  The same root cause appearing twice. The time between an incident's start and
+  the moment the team can explain it. Incidents closed without a cause. Changes
+  that have to be rolled back. Time to recover.
+
+technical_meaning: >-
+  Not a platform metric: a measure of whether the organisation is learning. A
+  long time to understand means the signals are not readable; recurrence means
+  the cause was never addressed; a high change failure rate means changes are
+  made without understanding.
+
+why_it_matters:
+  users: Disruptions that repeat, and confidence that erodes with each one.
+  business: >-
+    The trajectory of operational risk, and the credibility of any plan to
+    change the platform.
+
+if_nothing_is_done: >-
+  Control is lost quietly: each incident is handled, none is understood, and
+  the next change is a gamble.
+
+management_question: Are we stabilising, or drifting? Do we invest in stability, or in features?
+
+decision_context:
+  typical: escalate
+  note: This is the signal that decides the budget of the other nine.
+
+read_with: [api-health, messaging-health, workload-state-integrity]
+
+visual:
+  kind: two-trends
+  label: time to understand (hours) and recurring incidents, per quarter
+  time_to_understand: [6, 9, 14, 22, 31]
+  recurring: [1, 2, 2, 4, 6]
+
+sources:
+  - title: "Site Reliability Engineering — Postmortem culture: learning from failure"
+    url: https://sre.google/sre-book/postmortem-culture/
+  - title: "DORA — the four key metrics, including change failure rate and time to restore"
+    url: https://dora.dev/guides/dora-metrics-four-keys/
+  - title: "OpenStack Production Guide — root cause analysis and the incident record template"
+    url: https://github.com/soufian-zaouam/openstack-production-guide/blob/main/methodology/root-cause-analysis.md

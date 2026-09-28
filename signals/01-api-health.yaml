@@ -1,0 +1,52 @@
+# Signal 01 — the source of its KPI card, its guide page and its LinkedIn card.
+# Edit this file, then run `make cards pages pdf`. Never edit the rendered images.
+id: "01"
+slug: api-health
+name: API health
+subtitle: Response time and error rate, per API service
+domain: control-plane
+domain_label: Control plane
+page: "06"
+
+what_we_see: >-
+  API response times (p95) climbing week after week. Timeouts and 5xx responses
+  appearing on Nova, Neutron, Cinder or Keystone. Automation jobs that used to
+  finish now retry.
+
+technical_meaning: >-
+  The request path is degrading somewhere behind the API: saturated API workers,
+  slow token validation, a database under flow control, RPC calls waiting on the
+  message bus. The API is where the problem becomes visible, rarely where it starts.
+
+why_it_matters:
+  users: Slower consoles, failing pipelines, deployments that time out.
+  business: >-
+    The platform's capacity to deliver change is shrinking, usually long before
+    anyone calls it an incident.
+
+if_nothing_is_done: >-
+  Timeouts turn into retries, retries add load, and a slow platform becomes an
+  unavailable one.
+
+management_question: Is this temporary, growing, or becoming a service risk?
+
+decision_context:
+  typical: investigate
+  note: Monitor while flat, investigate when trending, freeze changes once users are affected.
+
+read_with: [messaging-health, database-health, control-plane-liveness]
+
+visual:
+  kind: line-rising
+  label: p95 response time, 8 weeks
+  series: [180, 190, 185, 220, 260, 310, 420, 560]
+  threshold: 400
+  unit: ms
+
+sources:
+  - title: "oslo.messaging — RPC timeouts and the message bus every API call depends on"
+    url: https://docs.openstack.org/oslo.messaging/latest/
+  - title: "Keystone — token validation on every authenticated request"
+    url: https://docs.openstack.org/keystone/latest/admin/tokens-overview.html
+  - title: "OpenStack Large Scale SIG — scaling the control plane"
+    url: https://wiki.openstack.org/wiki/Large_Scale_SIG

@@ -1,0 +1,48 @@
+{% import 'macros.html' as m %}
+<div class="fig">
+  <div class="fig-head">
+    <div>
+      <div class="fig-kicker">Regaining Control · What to keep</div>
+      <div class="fig-title">Eight principles</div>
+    </div>
+    <div class="fig-num">FIG. {{ fig_num }}</div>
+  </div>
+  <div class="fig-body">
+
+    {% set principles = [
+      ('01', 'tech', 'Understand before changing.',                        'A change made to test a hypothesis is still a production change.'),
+      ('02', 'tech', 'Start with questions, not dashboards.',              'A metric without a question is noise.'),
+      ('03', 'tech', 'One signal is rarely enough.',                       'Correlate, then conclude.'),
+      ('04', 'ops',  'Same reality, two languages.',                       'A signal that cannot be translated cannot be decided on.'),
+      ('05', 'ops',  'Stabilise before evolving.',                         'Urgency is not readiness.'),
+      ('06', 'biz',  'Regaining control is knowing, not fixing everything.', 'Know what works, what does not, and where the risk is.'),
+      ('07', 'biz',  'Every critical signal needs an owner.',              'Information without an owner is not a signal.'),
+      ('08', 'biz',  'Decide on evidence.',                                'What do we know, what do we not know, and what do we need before touching production?'),
+    ] %}
+    {% for num, reg, title, line in principles %}
+    {% set x = (loop.index0 % 4) * 282 %}
+    {% set y = (loop.index0 // 4) * 236 %}
+    <div class="panel {{ reg }} abs" style="left:{{ x }}px; top:{{ y }}px; width:266px; height:220px; padding:18px 20px 20px 20px; display:flex; flex-direction:column; gap:14px;">
+      <div class="mono" style="font-size:26px; font-weight:600; letter-spacing:0.08em; line-height:1.1; color:var(--ops);">{{ num }}</div>
+      <div>
+        <div style="font-size:21px; font-weight:600; line-height:1.2;">{{ title }}</div>
+        <div class="muted" style="font-size:16px; line-height:1.4; margin-top:12px;">{{ line }}</div>
+      </div>
+    </div>
+    {% endfor %}
+
+    <div class="panel ops abs" style="left:0; top:478px; width:1112px; height:80px; padding:0 22px; display:flex; align-items:center; justify-content:space-between;">
+      <span class="label t-ops" style="margin:0; white-space:nowrap;">The method</span>
+      <div class="row" style="gap:10px;">
+        {% for step in meta.journey %}
+        <span class="pill {{ 'biz' if loop.last else ('ops' if loop.index >= 5 else '') }}" style="font-size:15px;">{{ step }}</span>{% if not loop.last %}<span style="color:var(--fg-dim); font-size:18px;">→</span>{% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="abs mono" style="left:0; right:0; top:578px; display:flex; justify-content:space-between; font-size:14px; letter-spacing:0.06em; color:var(--fg-dim);">
+      <span>Less text. More clarity.</span>
+      <span class="t-ops">Observability is a shared language for understanding operational reality.</span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,49 @@
+# Signal 02 — the source of its KPI card, its guide page and its LinkedIn card.
+# Edit this file, then run `make cards pages pdf`. Never edit the rendered images.
+id: "02"
+slug: control-plane-liveness
+name: Control-plane liveness
+subtitle: Compute services and network agents, as the platform sees them
+domain: control-plane
+domain_label: Control plane
+page: "06"
+
+what_we_see: >-
+  Compute services and network agents reported down, or flapping between up and
+  down. Hosts that engineers can log into, and that the platform declares dead.
+
+technical_meaning: >-
+  Liveness is inferred from heartbeats that travel over the message bus and are
+  written to the database. A missing heartbeat means the report is late, not that
+  the host is down. The scheduler trusts the report: a host marked down is
+  excluded from every placement decision.
+
+why_it_matters:
+  users: Builds fail with "No valid host" while the racks are half empty; new ports cannot be bound.
+  business: The capacity you paid for is not the capacity the platform can use.
+
+if_nothing_is_done: >-
+  Invisible capacity is treated as missing capacity: hardware gets ordered, the
+  real fault stays.
+
+management_question: Is our capacity unavailable, or invisible?
+
+decision_context:
+  typical: investigate
+  note: Check the messaging path before any capacity decision.
+
+read_with: [messaging-health, scheduling-build-outcomes, capacity-headroom]
+
+visual:
+  kind: host-grid
+  label: 24 compute hosts, as reported vs reachable
+  reported_down: [5, 6, 11, 17, 18, 22]
+  reachable: true
+
+sources:
+  - title: "Nova — ComputeFilter: only hosts reported operational and enabled are candidates"
+    url: https://docs.openstack.org/nova/latest/admin/scheduling.html
+  - title: "Nova — service_down_time: the heartbeat window that decides up or down"
+    url: https://docs.openstack.org/nova/latest/configuration/config.html#DEFAULT.service_down_time
+  - title: "Neutron — agent_down_time and agent liveness reporting"
+    url: https://docs.openstack.org/neutron/latest/configuration/neutron.html#DEFAULT.agent_down_time

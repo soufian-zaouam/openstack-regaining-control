@@ -1,0 +1,80 @@
+{% import 'macros.html' as m %}
+<div class="fig">
+  <div class="fig-head">
+    <div>
+      <div class="fig-kicker">Regaining Control · The signals</div>
+      <div class="fig-title">Ten signals, one platform</div>
+    </div>
+    <div class="fig-num">FIG. {{ fig_num }}</div>
+  </div>
+  <div class="fig-body">
+
+    {# frame coords: layers x 18–782 (764 wide), right column x 794–1094 (300 wide), layers y 66–486 #}
+    {% set lx = 18 %}{% set lw = 764 %}{% set rx = 794 %}{% set rw = 300 %}
+    {% set l1 = (66, 140) %}{% set l2 = (218, 116) %}{% set l3 = (346, 140) %}
+
+    {% macro sig(num, name) -%}
+    <span class="pill" style="font-size:14px; padding:5px 12px;"><span class="t-ops">{{ num }}</span> {{ name }}</span>
+    {%- endmacro %}
+
+    {% macro layer(top, h, reg, label, components, pills, decisions) -%}
+    <div class="panel {{ reg }} abs" style="left:{{ lx }}px; top:{{ top }}px; width:{{ lw }}px; height:{{ h }}px; padding:14px 18px; display:flex; align-items:center;">
+      <div style="width:222px; flex:0 0 222px;">
+        <div class="label t-{{ reg }}" style="margin-bottom:9px;">{{ label }}</div>
+        <div class="mono" style="font-size:14px; line-height:1.35; color:var(--fg-muted);">{{ components }}</div>
+      </div>
+      <div style="flex:1 1 auto; margin-left:14px;">
+        <div style="display:flex; flex-wrap:wrap; gap:8px 10px; align-items:center;">
+          {% for n, name in pills %}{{ sig(n, name) }}{% endfor %}
+        </div>
+        <div class="mono" style="font-size:13px; letter-spacing:0.04em; color:var(--fg-muted); margin-top:9px;">{{ decisions }}</div>
+      </div>
+    </div>
+    {%- endmacro %}
+
+    <!-- organisation frame -->
+    <div class="panel biz dashed abs" style="left:0; top:0; width:1112px; height:546px; padding:0;">
+      <div class="label t-biz abs" style="left:18px; top:14px;">Organisation</div>
+
+      <!-- who calls the platform -->
+      <div class="abs mono center" style="left:{{ lx }}px; width:{{ lw }}px; top:12px; font-size:15px; letter-spacing:0.04em; color:var(--fg-muted);">users · pipelines · automation</div>
+      <div class="abs" style="left:{{ lx + lw // 2 - 7 }}px; top:34px;">{{ m.arrow_down(30, 'neutral', 2, 7) }}</div>
+
+      {{ layer(l1[0], l1[1], 'tech', 'Control plane',
+               'nova-api · neutron-api · cinder-api · keystone · scheduler · placement',
+               [('01','API health'), ('02','Control-plane liveness'), ('05','Scheduling and build outcomes')],
+               '01 → investigate · 02 → investigate · 05 → investigate') }}
+      {{ layer(l2[0], l2[1], 'ops', 'Shared services',
+               'rabbitmq · mariadb&nbsp;/&nbsp;galera · haproxy&nbsp;/&nbsp;vip',
+               [('03','Messaging health'), ('04','Database health')],
+               '03 → stabilise · 04 → investigate') }}
+      {{ layer(l3[0], l3[1], 'tech', 'Data plane',
+               'compute&nbsp;nodes&nbsp;(kvm) · storage&nbsp;(ceph) · network&nbsp;(ovs&nbsp;/&nbsp;ovn)',
+               [('06','Capacity headroom'), ('07','Storage health and latency'), ('08','Network data path and agents')],
+               '06 → escalate · 07 → escalate · 08 → investigate') }}
+
+      <!-- platform state, across the three layers -->
+      <div class="panel ops abs" style="left:{{ rx }}px; top:{{ l1[0] }}px; width:{{ rw }}px; height:{{ l3[0] + l3[1] - l1[0] }}px; padding:14px 18px;">
+        <div class="label t-ops" style="margin-bottom:0;">Platform state</div>
+        <div class="abs" style="left:18px; right:18px; top:50%; transform:translateY(-50%);">
+          {{ sig('09', 'Workload state integrity') }}
+          <div class="mono" style="font-size:14px; color:var(--fg-muted); margin-top:9px;">reported vs actual</div>
+          <div class="mono" style="font-size:13px; letter-spacing:0.04em; color:var(--fg-muted); margin-top:9px;">09 → stabilise</div>
+        </div>
+      </div>
+
+      <!-- signal 10, at the level of the organisation -->
+      <div class="abs row" style="left:{{ lx }}px; right:18px; top:{{ l3[0] + l3[1] + 16 }}px; gap:14px;">
+        {{ sig('10', 'Reliability trend') }}
+        <span class="mono" style="font-size:14px; color:var(--fg-muted);">recurrence · time to understand · change failure rate</span>
+        <span class="mono" style="margin-left:auto; font-size:13px; letter-spacing:0.04em; color:var(--fg-muted);">10 → escalate</span>
+      </div>
+    </div>
+
+    <!-- foot -->
+    <div class="abs" style="left:0; right:0; top:576px; display:flex; justify-content:space-between; align-items:center;">
+      {{ m.registers() }}
+      <span class="mono t-ops" style="font-size:14px; letter-spacing:0.06em;">Ten signals are enough to read a platform.</span>
+    </div>
+  </div>
+</div>

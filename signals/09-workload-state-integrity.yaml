@@ -1,0 +1,54 @@
+# Signal 09 — the source of its KPI card, its guide page and its LinkedIn card.
+# Edit this file, then run `make cards pages pdf`. Never edit the rendered images.
+id: "09"
+slug: workload-state-integrity
+name: Workload state integrity
+subtitle: What the platform reports, against what actually runs
+domain: platform-state
+domain_label: Platform state
+page: "10"
+
+what_we_see: >-
+  Instances in ERROR. Instances stuck in BUILD, DELETING or MIGRATING for hours.
+  Volumes attached to nothing. Ports and allocations that belong to instances
+  which no longer exist. Live migrations that fail or never finish.
+
+technical_meaning: >-
+  The database says one thing, the hypervisor another. Orphaned allocations
+  consume capacity no workload uses; stuck states block users and automation;
+  each inconsistency is a small lie the platform tells about itself, and
+  upgrades fail on those lies.
+
+why_it_matters:
+  users: Resources they cannot use or delete; quotas consumed by ghosts.
+  business: >-
+    The share of the platform's reported state you can trust, which is also
+    your upgrade readiness.
+
+if_nothing_is_done: >-
+  Entropy grows until nobody can say what the platform really runs, and every
+  change becomes a gamble.
+
+management_question: How much of what the platform reports is true?
+
+decision_context:
+  typical: stabilise
+  note: A hygiene campaign is cheaper than an upgrade that fails halfway.
+
+read_with: [database-health, capacity-headroom, scheduling-build-outcomes]
+
+visual:
+  kind: reported-vs-actual
+  label: reported vs verified, one platform
+  rows:
+    - [instances ACTIVE, 1240, 1197]
+    - [volumes in-use, 2180, 2061]
+    - [allocations, 1310, 1240]
+
+sources:
+  - title: "Nova — instance states (vm_state, task_state) and transitions"
+    url: https://docs.openstack.org/nova/latest/reference/vm-states.html
+  - title: "nova-manage placement heal_allocations / audit — orphaned and missing allocations"
+    url: https://docs.openstack.org/nova/latest/cli/nova-manage.html#placement
+  - title: "cinder-manage — volume state repair and attachment consistency"
+    url: https://docs.openstack.org/cinder/latest/cli/cinder-manage.html

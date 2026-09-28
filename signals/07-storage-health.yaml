@@ -1,0 +1,53 @@
+# Signal 07 — the source of its KPI card, its guide page and its LinkedIn card.
+# Edit this file, then run `make cards pages pdf`. Never edit the rendered images.
+id: "07"
+slug: storage-health
+name: Storage health and latency
+subtitle: Cluster health, fill level and client I/O latency
+domain: data-plane
+domain_label: Data plane
+page: "09"
+
+what_we_see: >-
+  Health warnings that never clear: OSDs down, placement groups degraded or
+  undersized. Pools approaching their full ratio. Client read and write latency
+  rising. Recovery traffic competing with production I/O.
+
+technical_meaning: >-
+  Every volume, every image and often every root disk lives on the same shared
+  backend. Degraded placement groups slow or block I/O; a cluster that reaches
+  its full ratio stops accepting writes and instances freeze on I/O errors;
+  recovery can degrade the platform as much as the failure it repairs.
+
+why_it_matters:
+  users: Frozen instances, slow disks, databases inside VMs that time out.
+  business: >-
+    The widest blast radius on the platform. A storage incident is a platform
+    incident, and a full cluster is an outage with a long recovery.
+
+if_nothing_is_done: >-
+  Fill level and degradation compound until writes stop for everyone at once.
+
+management_question: What is our worst-case blast radius, and how far are we from it?
+
+decision_context:
+  typical: escalate
+  note: Expansion and rebalancing have lead time; decide before the warning becomes an error.
+
+read_with: [workload-state-integrity, capacity-headroom, api-health]
+
+visual:
+  kind: fill-gauge
+  label: cluster fill level vs nearfull / full ratios
+  fill: 83
+  nearfull: 85
+  full: 95
+  latency_trend: [4, 4, 5, 7, 9, 12]
+
+sources:
+  - title: "Ceph — health checks (OSD_DOWN, PG_DEGRADED, POOL_NEAR_FULL, OSD_FULL)"
+    url: https://docs.ceph.com/en/latest/rados/operations/health-checks/
+  - title: "Ceph — storage capacity, nearfull and full ratios, what happens when writes stop"
+    url: https://docs.ceph.com/en/latest/rados/configuration/mon-config-ref/#storage-capacity
+  - title: "OpenStack Production Guide — Ceph full OSD and CRUSH weights (anonymised case)"
+    url: https://github.com/soufian-zaouam/openstack-production-guide/blob/main/incidents/ceph-full-osd-crush-weights.md

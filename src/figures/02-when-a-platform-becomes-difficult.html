@@ -1,0 +1,75 @@
+{% import 'macros.html' as m %}
+<div class="fig">
+  <div class="fig-head">
+    <div>
+      <div class="fig-kicker">Regaining Control · The situation</div>
+      <div class="fig-title">Two paths out of a platform in difficulty</div>
+    </div>
+    <div class="fig-num">FIG. {{ fig_num }}</div>
+  </div>
+  <div class="fig-body">
+
+    {# geometry: left chain x 0–480, risk meter x 496–536, right chain x 632–1112 #}
+    {% set chain_top = 134 %}{% set bh = 58 %}{% set gap = 16 %}{% set step = bh + gap %}
+
+    <!-- the situation -->
+    <div class="box ghost center abs" style="left:0; top:0; width:1112px; height:66px; padding:9px 14px; border-color:var(--neutral);">
+      <div style="font-size:20px; font-weight:600; color:var(--fg);">A platform in difficulty</div>
+      <div class="mono" style="font-size:14px; color:var(--fg-muted); margin-top:3px; letter-spacing:0.02em;">recurring incidents · degraded performance · unexplained behaviour · risky changes · fading knowledge · teams that disagree</div>
+    </div>
+
+    <!-- the fork: one stub, one bar, two arrows -->
+    <svg class="abs" style="left:0; top:66px;" width="1112" height="40" viewBox="0 0 1112 40" aria-hidden="true">
+      <line x1="556" y1="0" x2="556" y2="12" stroke="var(--rule)" stroke-width="2"/>
+      <line x1="240" y1="12" x2="872" y2="12" stroke="var(--rule)" stroke-width="2"/>
+      <line x1="240" y1="12" x2="240" y2="31" stroke="var(--risk)" stroke-width="2"/>
+      <path d="M235.5 31 L240 40 L244.5 31 Z" fill="var(--risk)"/>
+      <line x1="872" y1="12" x2="872" y2="31" stroke="var(--ops)" stroke-width="2"/>
+      <path d="M867.5 31 L872 40 L876.5 31 Z" fill="var(--ops)"/>
+    </svg>
+
+    <!-- branch labels -->
+    <div class="abs" style="left:0; top:110px; width:480px; white-space:nowrap;">
+      <span class="label t-risk">Change first</span><span class="mono" style="font-size:13px; letter-spacing:0.06em; color:var(--fg-muted);"> — the reflex</span>
+    </div>
+    <div class="abs" style="left:632px; top:110px; width:480px; white-space:nowrap;">
+      <span class="label t-ops">Understand first</span><span class="mono" style="font-size:13px; letter-spacing:0.06em; color:var(--fg-muted);"> — the method</span>
+    </div>
+
+    <!-- LEFT: change first -->
+    {% for w in ['Patch it', 'Upgrade it', 'Add capacity', 'Rebuild it', 'Migrate the workloads'] %}
+    <div class="box risk abs" style="left:0; top:{{ chain_top + loop.index0 * step }}px; width:480px; height:{{ bh }}px; padding:7px 12px; font-size:19px;">{{ w }}<span class="sub" style="font-size:14px; margin-top:2px;">on a system nobody fully understands</span></div>
+    {% if not loop.last %}<div class="abs" style="left:233px; top:{{ chain_top + loop.index0 * step + bh }}px;">{{ m.arrow_down(gap, 'risk', 1.5, 7) }}</div>{% endif %}
+    {% endfor %}
+    {% set left_end = chain_top + 4 * step + bh %}
+    <div class="abs" style="left:233px; top:{{ left_end }}px;">{{ m.arrow_down(gap, 'risk', 1.5, 7) }}</div>
+    <div class="box fill-risk abs" style="left:0; top:{{ left_end + gap }}px; width:480px; padding:9px 14px; font-size:17px; line-height:1.3;">evidence destroyed · risk compounds · the same symptoms come back</div>
+
+    <!-- risk meter: fills from bottom to top, one step per change -->
+    {% set mh = 4 * step + bh %}
+    <svg class="abs" style="left:496px; top:{{ chain_top }}px;" width="40" height="{{ mh }}" viewBox="0 0 40 {{ mh }}" aria-hidden="true">
+      <rect x="4" y="0.5" width="12" height="{{ mh - 1 }}" rx="2" fill="none" stroke="var(--rule)" stroke-width="1"/>
+      {% for i in range(5) %}
+      <rect x="5" y="{{ i * step + (1 if i == 0 else 0) }}" width="10" height="{{ bh + (gap if i < 4 else 0) - (1 if i == 0 else 0) }}" fill="var(--risk)" fill-opacity="{{ [0.14, 0.3, 0.48, 0.68, 0.9][i] }}"/>
+      {% endfor %}
+      <text transform="translate(34 {{ mh - 4 }}) rotate(-90)" style="font-family:var(--mono); font-size:13px; letter-spacing:0.1em;" fill="var(--risk)">risk accumulates ↑</text>
+    </svg>
+
+    <!-- RIGHT: understand first -->
+    {% for w, sub in [('Observe', 'what do we see?'), ('Understand', 'what does it mean?'), ('Correlate', 'which signals move together?'), ('Prioritise', 'what is critical?'), ('Stabilise', 'what must hold?')] %}
+    <div class="box ops abs" style="left:632px; top:{{ chain_top + loop.index0 * step }}px; width:480px; height:{{ bh }}px; padding:7px 12px; font-size:19px;">{{ w }}<span class="sub" style="font-size:14px; margin-top:2px;">{{ sub }}</span></div>
+    {% if not loop.last %}<div class="abs" style="left:865px; top:{{ chain_top + loop.index0 * step + bh }}px;">{{ m.arrow_down(gap, 'ops', 2, 7) }}</div>{% endif %}
+    {% endfor %}
+    <div class="abs" style="left:865px; top:{{ left_end }}px;">{{ m.arrow_down(gap, 'biz', 2, 7) }}</div>
+    <div class="box fill-biz glow-biz abs" style="left:632px; top:{{ left_end + gap }}px; width:480px; padding:8px 14px;">
+      <div style="font-size:20px; font-weight:600;">Decide what to change</div>
+      <span class="sub" style="font-size:14px; margin-top:2px; color:var(--fg);">known · unknown · risk · options · order</span>
+    </div>
+
+    <!-- foot -->
+    <div class="abs mono" style="left:0; right:0; top:582px; display:flex; justify-content:space-between; font-size:14px; letter-spacing:0.06em; color:var(--fg-dim);">
+      <span>When a platform becomes difficult to operate, the first step is not to change it.</span>
+      <span class="t-ops">It is to understand it.</span>
+    </div>
+  </div>
+</div>

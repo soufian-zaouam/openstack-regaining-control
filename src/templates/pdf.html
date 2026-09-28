@@ -1,0 +1,96 @@
+{% import 'macros.html' as m %}
+{#- The whole PDF: one .page per guide page. Variables: meta, pages (parsed md, by number),
+    figures (rendered figure bodies by slug), signal_pages (list of dicts: number, title,
+    lead, cards html), total. -#}
+{%- macro footer(n) -%}
+<div class="foot"><span>{{ meta.title }} · {{ meta.subtitle }}</span><span><span class="n">{{ n }}</span> / {{ meta.pages }}</span></div>
+{%- endmacro -%}
+
+{# ---------- 01 cover ---------- #}
+<section class="page cover" id="p01">
+  <h1 style="position:absolute; left:-999mm;">{{ meta.title }} — {{ meta.subtitle }}</h1>
+  <div class="kicker">{{ meta.kicker }}</div>
+  <div class="big">Regaining<br>Control</div>
+  <div class="subtitle">Observability for OpenStack Platforms in Difficulty</div>
+  <div class="tagline">{{ meta.tagline }} {{ meta.audience_line }}</div>
+  <div class="motif">{{ m.convergence(430, 13) }}</div>
+  <div class="bottom">
+    <div class="label">The path</div>
+    <div class="row">
+      {% for step in meta.journey %}<span class="pill {{ 'biz' if loop.last else ('ops' if loop.index >= 5 else '') }}">{{ step }}</span>{% if not loop.last %}<span style="color:var(--fg-dim);">→</span>{% endif %}{% endfor %}
+    </div>
+    <div class="author">
+      <div>
+        <div class="name">{{ meta.author.name }}</div>
+        <div class="line">{{ meta.pages }} pages · {{ meta.reading_time }}</div>
+      </div>
+      <div class="right">{{ meta.central_message }}<br>Signal → Meaning → Impact → Risk → Decision</div>
+    </div>
+  </div>
+</section>
+
+{# ---------- 02 … 16 ---------- #}
+{% for n in order %}
+  {% if n in signal_pages %}
+    {% set sp = signal_pages[n] %}
+<section class="page signals" id="p{{ n }}">
+  <div class="kicker">The signals <span class="sep">· {{ sp.range }} / 10</span></div>
+  <h1 class="title">{{ sp.title }}</h1>
+  <div class="lead">{{ sp.lead }}</div>
+  <div class="cards">{{ sp.cards }}</div>
+  {{ footer(n) }}
+</section>
+  {% else %}
+    {% set p = pages[n] %}
+<section class="page" id="p{{ n }}">
+  <div class="kicker">{{ p.kicker }} <span class="sep">· {{ n }} / {{ meta.pages }}</span></div>
+  <h1 class="title">{{ p.title }}</h1>
+  <div class="key">{{ p.key }}</div>
+  <div class="figwrap">{{ figures[p.figure] }}</div>
+  {% set ns = namespace(cols=p.sections|length) %}
+  <div class="blocks c{{ ns.cols if ns.cols <= 3 else 3 }}">
+    {% for s in p.sections %}
+    <div>
+      <h3>{{ s.heading }}</h3>
+      {% for para in s.paras %}<p>{{ para|inline }}</p>{% endfor %}
+      {% if s.bullets %}{% if s.ordered %}<ol>{% for it in s.bullets %}<li>{{ it|inline }}</li>{% endfor %}</ol>{% else %}<ul>{% for it in s.bullets %}<li>{{ it|inline }}</li>{% endfor %}</ul>{% endif %}{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% for c in p.callouts %}<div class="callout">{{ c|inline }}</div>{% endfor %}
+  {{ footer(n) }}
+</section>
+  {% endif %}
+{% endfor %}
+
+{# ---------- 17 closing ---------- #}
+<section class="page closing" id="p17">
+  <div class="kicker">{{ meta.closing.kicker }} <span class="sep">· {{ meta.pages }} / {{ meta.pages }}</span></div>
+  <h1 class="title">{{ meta.closing.title }}</h1>
+  <div class="questions">
+    {% for q in meta.closing.questions %}<div class="q"><span class="n">0{{ loop.index }}</span><span class="t">{{ q }}</span></div>{% endfor %}
+  </div>
+  <div class="line">{{ meta.closing.line }}</div>
+  <div class="invite">{{ meta.closing.invitation }}</div>
+  <div class="further">
+    {% for f in meta.closing.further %}
+    <a class="item" href="{{ f.url }}"><div class="l">{{ f.label }}</div><div class="t">{{ f.text }}</div><div class="u">{{ f.url|replace('https://','') }}</div></a>
+    {% endfor %}
+  </div>
+  <div class="band">
+    <div class="msg">{{ meta.central_message }}</div>
+    <div class="row">{% for step in meta.journey %}<span class="pill {{ 'biz' if loop.last else ('ops' if loop.index >= 5 else '') }}">{{ step }}</span>{% if not loop.last %}<span style="color:var(--fg-dim); font-size:8pt;">→</span>{% endif %}{% endfor %}</div>
+  </div>
+  <div class="author">
+    <div>
+      <div class="name">{{ meta.author.name }}</div>
+      <div class="l2">{{ meta.author.line }}</div>
+      <div class="l2"><a href="{{ meta.author.linkedin }}" style="color:inherit;">{{ meta.author.linkedin|replace('https://','') }}</a> · <a href="{{ meta.author.github }}" style="color:inherit;">{{ meta.author.github|replace('https://','') }}</a></div>
+    </div>
+    <div class="legal">
+      <div>Version {{ meta.version }} · {{ meta.date }}. Licensed under {{ meta.licence.long }} ({{ meta.licence.short }}).</div>
+      <div style="margin-top:1.5mm;">{{ meta.licence.notice }}</div>
+    </div>
+  </div>
+  {{ footer(meta.pages) }}
+</section>

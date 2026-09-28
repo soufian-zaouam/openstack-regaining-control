@@ -1,0 +1,6 @@
+.DS_Store
+__pycache__/
+*.pyc
+build/
+# LinkedIn posts and other promotion material are kept outside the repository
+linkedin/posts/

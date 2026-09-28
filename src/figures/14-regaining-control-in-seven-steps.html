@@ -1,0 +1,70 @@
+{% import 'macros.html' as m %}
+<div class="fig">
+  <div class="fig-head">
+    <div>
+      <div class="fig-kicker">Regaining Control · The method</div>
+      <div class="fig-title">Regaining control in seven steps</div>
+    </div>
+    <div class="fig-num">FIG. {{ fig_num }}</div>
+  </div>
+  <div class="fig-body">
+
+    <!-- from a platform in difficulty to a decision -->
+    <div class="box ghost abs center" style="left:0; top:0; width:236px; height:47px;">A platform in difficulty</div>
+    <div class="abs" style="left:248px; top:15px;">{{ m.arrow_right(606, 'ops') }}</div>
+    <div class="box fill-biz glow-biz abs center" style="left:866px; top:0; width:246px; height:47px; font-weight:600;">Decide what to change</div>
+
+    <!-- the seven steps, a rising staircase -->
+    {% set steps = [
+      ('01', 'Observe',        'tech',     'What do we see?',                          'an inventory of signals'),
+      ('02', 'Understand',     'tech',     'What does it mean?',                       'a translation, technical and operational'),
+      ('03', 'Correlate',      'tech',     'Which signals move together?',             'a correlated picture, with a since-when'),
+      ('04', 'Prioritise',     'ops',      'What is critical, what is secondary?',     'a ranked list of risks'),
+      ('05', 'Stabilise',      'ops',      'What must hold before anything changes?',  'a platform that holds'),
+      ('06', 'Regain control', 'fill-ops', 'What do we now know for certain?',         'known · unknown · risk zones · dependencies'),
+      ('07', 'Decide',         'fill-biz', 'What do we change, in what order?',        'a change plan, with rollback and signals to watch'),
+    ] %}
+    {% for num, name, cls, ask, get in steps %}
+    {% set i = loop.index0 %}
+    {% set x = i * 160 %}
+    {% set y = 70 + (6 - i) * 22 %}
+    {% set reg = 'biz' if cls == 'fill-biz' else ('ops' if cls in ('ops', 'fill-ops') else 'tech') %}
+    <div class="box {{ cls }} abs" style="left:{{ x }}px; top:{{ y }}px; width:152px; height:90px; padding:9px 12px; display:flex; flex-direction:column; justify-content:space-between;">
+      <span class="step-num" style="color:var(--{{ reg }});">{{ num }}</span>
+      <span style="font-size:20px; font-weight:600; line-height:1.15;">{{ name }}</span>
+    </div>
+    <div class="abs" style="left:{{ x }}px; top:{{ y + 100 }}px; width:152px;">
+      <div class="label" style="line-height:1.2;">Ask</div>
+      <div style="font-size:15px; line-height:1.3; margin-top:2px;">{{ ask }}</div>
+      <div class="label" style="line-height:1.2; margin-top:8px;">Get</div>
+      <div class="muted" style="font-size:15px; line-height:1.3; margin-top:2px;">{{ get }}</div>
+    </div>
+    {% endfor %}
+
+    <!-- what control regained means -->
+    <div class="panel biz abs" style="left:0; top:430px; width:1112px; height:132px;">
+      <span class="label t-biz">Control regained means</span>
+      <div class="row" style="gap:16px; align-items:flex-start;">
+        {% for item in [
+          'you know what works and what does not',
+          'you know the risk zones and the dependencies',
+          'you can tell a critical problem from a secondary anomaly',
+          'you know what can change without excessive risk',
+          'you hold information reliable enough to decide',
+        ] %}
+        <div style="flex:1 1 0; display:flex; gap:8px; align-items:flex-start;">
+          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" style="flex:none; margin-top:3px;">
+            <path d="M3 9.5 L7.2 13.5 L15 4.5" fill="none" stroke="var(--biz)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div style="font-size:17px; line-height:1.3;">{{ item }}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="abs mono" style="left:0; right:0; top:580px; display:flex; justify-content:space-between; font-size:13px; letter-spacing:0.03em; color:var(--fg-dim);">
+      <span>It is a loop, not a project: every change is observed with the same signals.</span>
+      <span class="t-ops">Regaining control is knowing, not fixing everything.</span>
+    </div>
+  </div>
+</div>

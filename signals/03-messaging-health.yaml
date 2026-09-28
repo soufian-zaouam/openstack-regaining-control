@@ -1,0 +1,50 @@
+# Signal 03 — the source of its KPI card, its guide page and its LinkedIn card.
+# Edit this file, then run `make cards pages pdf`. Never edit the rendered images.
+id: "03"
+slug: messaging-health
+name: Messaging health
+subtitle: RabbitMQ queues, consumers and partitions
+domain: shared-services
+domain_label: Shared services
+page: "07"
+
+what_we_see: >-
+  Queues that grow instead of draining. Unacknowledged messages piling up.
+  Consumers disappearing and reconnecting. A cluster reporting a partition after
+  a network event.
+
+technical_meaning: >-
+  OpenStack services talk to each other through RPC over the message bus. When
+  it degrades, calls slow down or time out, heartbeats are lost, and conductor
+  and scheduler build a backlog. Every symptom shows up somewhere else first.
+
+why_it_matters:
+  users: Instances stuck in BUILD or DELETING, operations that succeed on the second try, unexplained slowness.
+  business: One shared dependency can take the whole control plane with it. This is the systemic risk of the platform.
+
+if_nothing_is_done: >-
+  Degradation spreads to APIs, scheduling and liveness reporting, until the
+  safest option left is to stop the APIs and rebuild the cluster.
+
+management_question: Is a systemic dependency at risk before we change anything else?
+
+decision_context:
+  typical: stabilise
+  note: Stabilise the bus before any patch, upgrade or capacity change.
+
+read_with: [api-health, control-plane-liveness, scheduling-build-outcomes]
+
+visual:
+  kind: step-rising
+  label: queue depth after a network event
+  series: [40, 45, 42, 48, 260, 610, 980, 1400]
+  event_at: 4
+  unit: messages
+
+sources:
+  - title: "RabbitMQ — clustering and network partitions"
+    url: https://www.rabbitmq.com/docs/partitions
+  - title: "oslo.messaging — RabbitMQ driver, heartbeats and timeouts"
+    url: https://docs.openstack.org/oslo.messaging/latest/admin/rabbit.html
+  - title: "OpenStack Production Guide — RabbitMQ partition: stopping the APIs (anonymised case)"
+    url: https://github.com/soufian-zaouam/openstack-production-guide/blob/main/incidents/rabbitmq-partition-api-stop.md

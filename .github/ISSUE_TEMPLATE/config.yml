@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: The Production Guide
+    url: https://github.com/soufian-zaouam/openstack-production-guide
+    about: Commands, troubleshooting pages and incident cases live there; corrections to them go to its own repository.
+  - name: The book
+    url: https://github.com/soufian-zaouam/openstack-the-day-after-tomorrow
+    about: OpenStack, the Day After Tomorrow — errata and suggestions for the book go to its own repository.

@@ -1,0 +1,53 @@
+# Signal 06 — the source of its KPI card, its guide page and its LinkedIn card.
+# Edit this file, then run `make cards pages pdf`. Never edit the rendered images.
+id: "06"
+slug: capacity-headroom
+name: Capacity headroom
+subtitle: Usable margin per zone, and the time left before saturation
+domain: data-plane
+domain_label: Data plane
+page: "08"
+
+what_we_see: >-
+  Allocated versus usable vCPU, memory and disk per availability zone or
+  aggregate, after overcommit and reservations. The margin left to evacuate one
+  host. The trend, and the date it crosses zero.
+
+technical_meaning: >-
+  Placement knows the inventory and the allocations; usable headroom is what
+  remains once reserved resources, overcommit ratios and failure domains are
+  taken into account. A cluster can be 60 % allocated and still unable to
+  evacuate a single host.
+
+why_it_matters:
+  users: Failed builds, and maintenance windows that keep being postponed.
+  business: >-
+    No headroom means no live migration, no patching campaign, no safe upgrade.
+    Capacity is the precondition of maintenance, and therefore of security.
+
+if_nothing_is_done: >-
+  Patching stops, security debt grows, and the next hardware failure has
+  nowhere to evacuate to.
+
+management_question: When do we invest, reclaim or freeze onboarding, and can we still patch?
+
+decision_context:
+  typical: escalate
+  note: A capacity trend is an investment decision; the date it crosses zero is the deadline.
+
+read_with: [scheduling-build-outcomes, workload-state-integrity, reliability-trend]
+
+visual:
+  kind: headroom-projection
+  label: usable memory, one zone, projected
+  used: [52, 55, 58, 63, 67, 72, 76, 81]
+  n_plus_one: 88
+  saturation_in: "14 weeks"
+
+sources:
+  - title: "Placement — inventories, reserved resources and allocation ratios"
+    url: https://docs.openstack.org/placement/latest/user/provider-tree.html
+  - title: "Nova — host aggregates and availability zones"
+    url: https://docs.openstack.org/nova/latest/admin/aggregates.html
+  - title: "Nova — cpu_allocation_ratio, ram_allocation_ratio, reserved_host_memory_mb"
+    url: https://docs.openstack.org/nova/latest/configuration/config.html#DEFAULT.cpu_allocation_ratio

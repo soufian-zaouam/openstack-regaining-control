@@ -1,0 +1,35 @@
+name: Erratum
+description: A technical statement, a translation or a figure that is wrong or outdated
+title: "[erratum] "
+labels: ["erratum"]
+body:
+  - type: input
+    id: where
+    attributes:
+      label: Where
+      description: The page of the guide, the signal file, or the figure
+      placeholder: signals/03-messaging-health.yaml, technical_meaning · or guide/11, second section · or figure 12
+    validations:
+      required: true
+  - type: textarea
+    id: wrong
+    attributes:
+      label: What is wrong
+      description: Quote the sentence as it appears
+    validations:
+      required: true
+  - type: textarea
+    id: correct
+    attributes:
+      label: What is correct
+      description: The corrected statement, and the release, backend or deployment tool it applies to if that matters
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source
+      description: Project documentation, release notes or source code that shows the correct behaviour
+      placeholder: https://docs.openstack.org/…
+    validations:
+      required: true

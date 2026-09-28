@@ -1,0 +1,42 @@
+name: Signal
+description: Challenge one of the ten signals, or propose the one you would have chosen instead
+title: "[signal] "
+labels: ["signal"]
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      options:
+        - Challenge one of the ten (it should not be there, or should be read differently)
+        - Propose a signal that is not there
+        - Improve a card's translation (why it matters, management question, decision context)
+    validations:
+      required: true
+  - type: input
+    id: signal
+    attributes:
+      label: Signal
+      description: The signal concerned, existing or proposed
+      placeholder: 06 Capacity headroom · or "Certificate and key expiry"
+    validations:
+      required: true
+  - type: textarea
+    id: decision
+    attributes:
+      label: The decision it supports
+      description: Which decision a decision-maker can take, or take better, because this signal is read — invest, stabilise, freeze, investigate, escalate — and the question they can ask their team
+    validations:
+      required: true
+  - type: textarea
+    id: reading
+    attributes:
+      label: How it is read
+      description: What we see, what it means technically and operationally, which signals it must be read with. Generic and deployment-neutral; no environment data.
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source
+      description: The primary source behind the technical statement

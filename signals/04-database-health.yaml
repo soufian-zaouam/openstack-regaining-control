@@ -1,0 +1,53 @@
+# Signal 04 — the source of its KPI card, its guide page and its LinkedIn card.
+# Edit this file, then run `make cards pages pdf`. Never edit the rendered images.
+id: "04"
+slug: database-health
+name: Database health
+subtitle: MariaDB / Galera cluster state, flow control and growth
+domain: shared-services
+domain_label: Shared services
+page: "07"
+
+what_we_see: >-
+  A cluster that is not Primary, or smaller than it should be. Flow-control
+  pauses. Slow queries and connection pools at their limit. Tables that keep
+  growing because deleted records are never archived.
+
+technical_meaning: >-
+  Every API write lands here. Under flow control the whole cluster pauses writes
+  so that the slowest node can catch up; exhausted connection pools become API
+  errors; unarchived rows slow queries and lengthen upgrades. This is the
+  platform's record of what exists.
+
+why_it_matters:
+  users: Timeouts, and reported states that do not match reality.
+  business: >-
+    If the record is not trustworthy, neither is any report built on it, and
+    every upgrade starts on unstable ground.
+
+if_nothing_is_done: >-
+  Split-brain risk, longer recoveries, and upgrades that fail on data nobody
+  cleaned.
+
+management_question: Is the platform's record of what exists trustworthy?
+
+decision_context:
+  typical: investigate
+  note: Plan hygiene windows before any upgrade programme, not during it.
+
+read_with: [api-health, messaging-health, workload-state-integrity]
+
+visual:
+  kind: cluster-flow
+  label: 3-node cluster, flow control paused 3 times this week
+  nodes: 3
+  pauses: 3
+  growth: "+38 % rows in 12 months"
+
+sources:
+  - title: "Galera Cluster — understanding flow control"
+    url: https://galeracluster.com/library/kb/understanding-flow-control.html
+  - title: "Galera Cluster — node state and cluster status (Primary component)"
+    url: https://galeracluster.com/library/documentation/node-states.html
+  - title: "nova-manage db archive_deleted_rows — archiving soft-deleted records"
+    url: https://docs.openstack.org/nova/latest/cli/nova-manage.html#nova-database

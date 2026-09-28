@@ -1,0 +1,67 @@
+name: Build the guide
+
+# The figures, the cards, the generated pages and the PDF are generated files:
+# the YAML, Markdown and HTML sources next to them are the source of truth.
+# Edit a source, and this workflow rebuilds what depends on it and commits the
+# result; on a release, it attaches the PDF to the release.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "signals/*.yaml"
+      - "guide/*.md"
+      - "src/**"
+      - "Makefile"
+      - "requirements.txt"
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-guide
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install fonts, Python dependencies and Chromium
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fonts-ibm-plex poppler-utils
+          fc-cache -f
+          pip install -r requirements.txt
+          python -m playwright install --with-deps chromium
+
+      - name: Build figures, cards, pages and the PDF
+        run: make all check
+
+      - name: Commit what changed
+        if: github.event_name != 'release'
+        run: |
+          git config user.name "Soufian Zaouam"
+          git config user.email "18644174+soufian-zaouam@users.noreply.github.com"
+          git add figures guide "Regaining-Control-Observability-for-OpenStack-Platforms-in-Difficulty.pdf"
+          if git diff --cached --quiet; then
+            echo "The generated files already match their sources: nothing to commit."
+            exit 0
+          fi
+          git diff --cached --name-only
+          git commit -m "build: regenerate the figures, pages and PDF from their sources"
+          git push origin HEAD:main
+
+      - name: Attach the PDF to the release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${{ github.event.release.tag_name }}" "Regaining-Control-Observability-for-OpenStack-Platforms-in-Difficulty.pdf" --clobber

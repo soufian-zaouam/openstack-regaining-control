@@ -1,0 +1,39 @@
+/* Regaining Control — design tokens.
+   Shared by the figures, the KPI cards, the PDF pages and the LinkedIn slides.
+   Three registers, applied everywhere: Technical (blue), Operational (amber),
+   Business / Decision (teal). Risk red is rare and always labelled. */
+:root {
+  /* dark surfaces: the "instrument" the figures are drawn on */
+  --ink-0: #0f1621;
+  --ink-1: #141c28;
+  --ink-2: #1b2430;
+  --ink-3: #223042;
+  --rule: #2f3a48;
+  --rule-soft: #26303e;
+  --fg: #e8e6e1;
+  --fg-muted: #9aa3ad;
+  --fg-dim: #6b7480;
+
+  /* light surfaces: the paper the PDF pages are printed on */
+  --paper: #f7f5f0;
+  --paper-2: #efece5;
+  --paper-rule: #d9d4c9;
+  --ink-text: #1b2430;
+  --ink-muted: #6b7480;
+
+  /* the three registers */
+  --tech: #5aa0e0;
+  --ops: #e0a458;
+  --biz: #35b5a0;
+  --risk: #e0655a;
+  --neutral: #9aa3ad;
+
+  --tech-soft: rgba(90, 160, 224, 0.16);
+  --ops-soft: rgba(224, 164, 88, 0.16);
+  --biz-soft: rgba(53, 181, 160, 0.16);
+  --risk-soft: rgba(224, 101, 90, 0.16);
+  --neutral-soft: rgba(154, 163, 173, 0.14);
+
+  --sans: 'IBM Plex Sans', 'Plex Sans', 'DejaVu Sans', Arial, sans-serif;
+  --mono: 'IBM Plex Mono', 'Plex Mono', 'DejaVu Sans Mono', Menlo, monospace;
+}

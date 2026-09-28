@@ -1,0 +1,56 @@
+# Shared metadata: the cover (page 01), the closing page (page 17), the running
+# header and footer of the PDF, and the links used everywhere.
+title: Regaining Control
+subtitle: Observability for OpenStack Platforms in Difficulty
+tagline: Ten signals, one shared language.
+audience_line: A visual guide for technical decision-makers.
+kicker: OpenStack · Observability · Day-2 operations
+pages: 17
+version: "1.0"
+date: "2026-09-29"
+reading_time: "10 minutes to read, 30 to go deeper"
+
+author:
+  name: Soufian Zaouam
+  line: Platform engineer, Day-2 operations of mission-critical OpenStack platforms; author of "OpenStack, the Day After Tomorrow".
+  linkedin: https://www.linkedin.com/in/soufian-zaouam
+  github: https://github.com/soufian-zaouam
+
+repository: https://github.com/soufian-zaouam/openstack-regaining-control
+
+journey: [Observe, Understand, Correlate, Prioritise, Stabilise, Regain control, Decide]
+
+central_message: Observability is a shared language for understanding operational reality.
+opening_message: "When a platform becomes difficult to operate, the first step is not to change it. It is to understand it."
+
+closing:
+  kicker: The conversation
+  title: Let's talk
+  questions:
+    - Is your OpenStack platform becoming difficult to understand, operate or evolve?
+    - Do you know which signals your team is reading, and which it is not?
+    - Do you know what you can safely change?
+  line: Before changing the platform, understand it.
+  invitation: If you want to read your own platform through these ten signals, I am glad to talk.
+  further:
+    - label: The repository
+      text: The source of every signal, the selection criteria, the signals left out, and how this guide is built.
+      url: https://github.com/soufian-zaouam/openstack-regaining-control
+    - label: The book
+      text: "OpenStack, the Day After Tomorrow — why control over a platform erodes, and how to keep it."
+      url: https://github.com/soufian-zaouam/openstack-the-day-after-tomorrow
+    - label: The Production Guide
+      text: The checks, commands and anonymised incident cases behind these signals.
+      url: https://github.com/soufian-zaouam/openstack-production-guide
+    - label: LinkedIn
+      text: For the conversation.
+      url: https://www.linkedin.com/in/soufian-zaouam
+
+licence:
+  short: CC BY-NC-ND 4.0
+  long: Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International
+  url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+  notice: >-
+    An independent work. Not affiliated with, sponsored by or endorsed by the
+    OpenInfra Foundation or any OpenStack project team. OpenStack is a trademark
+    of the OpenStack Foundation d/b/a Open Infrastructure Foundation.

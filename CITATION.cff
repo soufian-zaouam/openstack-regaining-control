@@ -1,0 +1,33 @@
+cff-version: 1.2.0
+message: "If you use or share this guide, please cite it as below."
+type: dataset
+title: "Regaining Control: Observability for OpenStack Platforms in Difficulty"
+authors:
+  - family-names: Zaouam
+    given-names: Soufian
+version: "1.0"
+date-released: 2026-09-29
+license: CC-BY-NC-ND-4.0
+repository-code: "https://github.com/soufian-zaouam/openstack-regaining-control"
+abstract: "A 17-page visual guide for technical decision-makers: ten observability signals chosen for the decision they support, each read through the chain Signal, Meaning, Impact, Risk, Decision, and a seven-step path to regain control of an OpenStack platform in difficulty before changing it."
+keywords:
+  - OpenStack
+  - observability
+  - Day-2 operations
+  - private cloud
+  - platform engineering
+  - decision-making
+  - operational risk
+references:
+  - type: book
+    title: "OpenStack, the Day After Tomorrow: Operating Mission-Critical OpenStack Platforms"
+    authors:
+      - family-names: Zaouam
+        given-names: Soufian
+    url: "https://github.com/soufian-zaouam/openstack-the-day-after-tomorrow"
+  - type: dataset
+    title: "OpenStack Production Guide: how to operate and troubleshoot OpenStack in production"
+    authors:
+      - family-names: Zaouam
+        given-names: Soufian
+    url: "https://github.com/soufian-zaouam/openstack-production-guide"

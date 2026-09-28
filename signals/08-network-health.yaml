@@ -1,0 +1,53 @@
+# Signal 08 — the source of its KPI card, its guide page and its LinkedIn card.
+# Edit this file, then run `make cards pages pdf`. Never edit the rendered images.
+id: "08"
+slug: network-health
+name: Network data path and agents
+subtitle: Agents alive, ports bound, packets delivered
+domain: data-plane
+domain_label: Data plane
+page: "09"
+
+what_we_see: >-
+  Network agents (Open vSwitch or OVN, L3, DHCP, metadata) reported dead or
+  flapping. Ports that fail to bind. Packet loss or latency between nodes.
+  Routers failing over more often than expected.
+
+technical_meaning: >-
+  A dead agent does not break existing traffic; it stops new connectivity from
+  being created (ports, addresses, routes). A binding failure turns a build into
+  an ERROR. Router failovers and inter-node loss produce the intermittent
+  problems no single team can reproduce.
+
+why_it_matters:
+  users: '"Intermittent connectivity", unreachable new instances, applications blamed for a platform fault.'
+  business: >-
+    Application availability, and the credibility of the platform team when
+    nobody can explain what happened.
+
+if_nothing_is_done: >-
+  Chronic flakiness: incidents closed without a cause, and users who build
+  around the platform instead of on it.
+
+management_question: Is it the network layer, or the applications on top of it?
+
+decision_context:
+  typical: investigate
+  note: Freeze network changes while the layer is unstable; investigate with evidence, not restarts.
+
+read_with: [control-plane-liveness, scheduling-build-outcomes, messaging-health]
+
+visual:
+  kind: loss-spikes
+  label: inter-node packet loss, 7 days, and agent state
+  series: [0, 0, 0.2, 0, 1.8, 0.1, 0, 2.6, 0.3, 0, 0, 3.1, 0.2, 0]
+  agents_total: 12
+  agents_flapping: 3
+
+sources:
+  - title: "Neutron — agent management and high availability of L3 routers"
+    url: https://docs.openstack.org/neutron/latest/admin/deploy-ovs-ha-vrrp.html
+  - title: "Neutron — OVN driver architecture and the absence of per-node agents"
+    url: https://docs.openstack.org/neutron/latest/ovn/index.html
+  - title: "Neutron — ML2 port binding"
+    url: https://docs.openstack.org/neutron/latest/admin/config-ml2.html

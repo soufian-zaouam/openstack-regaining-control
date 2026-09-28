@@ -1,0 +1,53 @@
+{# KPI card. Variables: s (signal dict), mode ('social' | 'page'), visual_svg, meta. #}
+<div class="card {{ mode }}">
+{% if mode == 'social' %}
+  <div class="top">
+    <span class="k">Regaining Control · Signal {{ s.id }} / 10</span>
+    <span class="domain {{ s.register }}">{{ s.domain_label }}</span>
+  </div>
+  <div class="name">{{ s.name }}</div>
+  <div class="sub">{{ s.subtitle }}</div>
+  <div class="visual">{{ visual_svg }}<div class="vl">{{ s.visual.label }}</div></div>
+  <div class="blocks">
+    <div class="block"><div class="k">What we see</div><div class="t">{{ s.what_we_see }}</div></div>
+    <div class="block"><div class="k">Technical meaning</div><div class="t">{{ s.technical_meaning }}</div></div>
+    <div class="block"><div class="k">Why it matters</div><div class="t">{{ s.why_it_matters.users }} {{ s.why_it_matters.business }}</div></div>
+    <div class="block"><div class="k">If nothing is done</div><div class="t">{{ s.if_nothing_is_done }}</div></div>
+    <div class="block q"><div class="k">Management question</div><div class="t">{{ s.management_question }}</div></div>
+  </div>
+  <div class="bottom">
+    <div class="k">Decision context</div>
+    <div class="note">{{ s.decision_context.note }}</div>
+    <div class="scale">{% for step in DECISION_STEPS %}<div class="seg {{ 'on' if step == s.decision_context.typical else '' }}">{{ step }}</div>{% endfor %}</div>
+    <div class="chips"><span class="chip" style="border-color:transparent; padding-left:0;">read with</span>{% for n in s.read_with_names %}<span class="chip">{{ n }}</span>{% endfor %}</div>
+    <div class="foot"><span>Observability for OpenStack Platforms in Difficulty</span><span>github.com/soufian-zaouam/openstack-regaining-control</span></div>
+  </div>
+{% else %}
+  <div class="head">
+    <div class="side">
+      <span class="k">Signal {{ s.id }} / 10</span>
+      <div class="name">{{ s.name }}</div>
+      <div class="sub">{{ s.subtitle }}</div>
+      <span class="domain {{ s.register }}">{{ s.domain_label }}</span>
+      <div class="block q"><div class="k">Management question</div><div class="t">{{ s.management_question }}</div></div>
+    </div>
+    <div class="visual">{{ visual_svg }}<div class="vl">{{ s.visual.label }}</div></div>
+  </div>
+  <div class="blocks">
+    <div class="block"><div class="k">What we see</div><div class="t">{{ s.what_we_see }}</div></div>
+    <div class="block"><div class="k">Technical meaning</div><div class="t">{{ s.technical_meaning }}</div></div>
+    <div class="block"><div class="k">Why it matters</div><div class="t">{{ s.why_it_matters.users }} {{ s.why_it_matters.business }}</div></div>
+    <div class="block"><div class="k">If nothing is done</div><div class="t">{{ s.if_nothing_is_done }}</div></div>
+  </div>
+  <div class="bottom">
+    <div>
+      <div class="k">Decision context</div>
+      <div class="scale">{% for step in DECISION_STEPS %}<div class="seg {{ 'on' if step == s.decision_context.typical else '' }}">{{ step }}</div>{% endfor %}</div>
+    </div>
+    <div>
+      <div class="note">{{ s.decision_context.note }}</div>
+      <div class="chips"><span class="chip" style="border-color:transparent; padding-left:0;">read with</span>{% for n in s.read_with_names %}<span class="chip">{{ n }}</span>{% endfor %}</div>
+    </div>
+  </div>
+{% endif %}
+</div>
